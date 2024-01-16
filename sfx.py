@@ -174,6 +174,8 @@ def update_sound_player(file_path, enum_value, bank_name, sound_name, inst_pos, 
         ]
         lines.insert(align_index, '\n')  # Insert a newline before .align 2, 0
         lines[align_index:align_index] = new_lines  # Insert the new lines before .align 2, 0
+        print(f"Sound bank '{bank_name}' successfully created.")
+        print(f"Sound '{sound_name}' successfully added to bank '{bank_name}'.")
 
     with open(file_path, 'w') as file:
         file.writelines(lines)
@@ -234,15 +236,16 @@ def create_or_update_json_file(bank_path, sound_name, bank_name, decomp_director
                 "sound": sound_name.lower()
             }
             inst_json_data['instrument_list'].append(inst_key)
+            print(f"Sound '{sound_name}' successfully added to bank '{bank_name}'.")
 
             with open(inst_json_path, 'w') as inst_json_file:
                 json.dump(inst_json_data, inst_json_file, indent=2)
 
             # Return the position of the added sound effect
-            print(f"Sound {sound_name} successfully added to bank {bank_name}.")
+            
             return len(inst_json_data['instrument_list']) - 1
         else:
-            print(f"Sound {sound_name} already exists in bank {bank_name}.")
+            print(f"Sound '{sound_name}' already exists in bank '{bank_name}'.")
 
     else:
         # Create a new JSON file with the specified structure
@@ -410,7 +413,7 @@ def add_sound_effect(sound_path, bank_name, sound_name):
     update_sound_player(decomp_directory, enum_value-1, bank_name, sound_name, inst_pos, hex_length)
     update_external(decomp_directory, bank_name)
     # Step 6: Success message
-    #print(f"Successfully added sound {sound_name} to bank {bank_name}.")
+    #print(f"Successfully added sound effect {sound_name} to bank {bank_name}!")
 
 # Example usage:
 decomp_input = os.path.expanduser(input("Enter the full path of your decomp directory: "))
