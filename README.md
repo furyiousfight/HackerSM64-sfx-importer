@@ -3,10 +3,32 @@ A command line tool designed to streamline the addition of custom sound effects 
 
 ## Features
 - Automatic sound bank creation and modification.
+    - The tool automates the following changes:
+        - Creates a copy of the given sound effect `.aiff` file within the associated sample folder
+        - Sounds.h
+            - On new bank creation:
+                - Appends the new bank into the SoundBank enum, above `SOUND_BANK_COUNT`
+                - Generates and appends an appropriate `SOULD_ARG_LOAD` line above the `#endif` near the bottom of the file
+            - On adding to an existing bank:
+                - Appends the appropraite `#define` below the most recent match, and updates the sound ID of the new line accordingly.
+        - 00_sound_player.s
+            - On new bank creation:
+                - Appends an appropriate `seq_startchannel` with a calculated ID, and `.channel`` based on the given bank name.
+                - Creates a `.channel` and associated table, places the new `sound_ref` within the table, and creates entry for the `.sound` and `.layer`
+            - On adding to an existing bank:
+                - Appends the new `sound_ref` to the appropriate table
+                - Creates new entries below the associated table for the corresponding `.sound` and `.layer`
+        - sequences.json
+            - On new bank creation, appends the file name of the banks generated `.json` file to the array `"00_sound_player"`
+        - `X`.json
+            - On new bank creation:
+                - Creates a `.json` file and associated sample folder, based on the given bank name
+            - Handles the update or creation of the `instruments` and `instruments_list`
 - Adding of new sound effects to custom banks.
 - Automatic length detection of new sounds.
 - Avoids creation of duplicate sound effects in a given bank.
 - Case and Space insensitive to the names of sound banks, and sound effects.
+
 
 ## Known issues
 - No support for vanilla sound banks.
