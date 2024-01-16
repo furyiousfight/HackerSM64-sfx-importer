@@ -37,6 +37,19 @@ def get_duration_and_convert_to_hex(file_path):
 
     return duration_hex
 
+def check_sound_input(sound_path):
+    # Check if the specified file exists
+    if not os.path.exists(sound_path):
+        print("Invalid sound file path. Please provide a valid path.")
+        return False
+
+    # Check if the file type is valid
+    if not sound_path.lower().endswith(('.aiff')):
+        print("Invalid file type. Supported type: .aiff")
+        return False
+
+    return True
+
 def update_sequences_json(bank_name, decomp_directory, hex_value_bank_name):
     sequences_json_path = os.path.join(decomp_directory, 'sound', 'sequences.json')
 
@@ -293,16 +306,6 @@ def get_unused_hex_value():
     return 'FF'
 
 def add_sound_effect(sound_path, bank_name, sound_name):
-    # Check if the decomp directory is set
-    if 'decomp_directory' not in globals():
-        print("Decomp directory is not set. Please set it first.")
-        return
-
-    # Check if the file type is valid
-    if not sound_path.lower().endswith(('.aiff')):
-        print("Invalid file type. Supported type: .aiff")
-        return
-
     # Convert WSL path to Windows path for raw sound file
     sound_folder = os.path.join(decomp_directory, 'sound', 'samples', f'sfx_{bank_name.lower()}')
 
@@ -419,6 +422,7 @@ def add_sound_effect(sound_path, bank_name, sound_name):
 decomp_input = os.path.expanduser(input("Enter the full path of your decomp directory: "))
 if set_decomp_directory(decomp_input):
     sound_input = input("Enter the full path of your sound file: ")
-    bank_name = get_input("Enter the bank name: ")
-    sound_name = get_input("Enter the sound name: ")
-    add_sound_effect(sound_input, bank_name, sound_name)
+    if check_sound_input(sound_input):
+        bank_name = get_input("Enter the bank name: ")
+        sound_name = get_input("Enter the sound name: ")
+        add_sound_effect(sound_input, bank_name, sound_name)
