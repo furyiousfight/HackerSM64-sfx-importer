@@ -380,13 +380,17 @@ def add_sound_effect(sound_path, bank_name, sound_name):
     # Check if a line with both '#define' and 'SOUND_BANK_{bank_name}' exists
     matching_lines = [i for i, line in enumerate(content) if '#define' in line and sound_bank_declaration in line]
 
-    if matching_lines:
-        # If such lines exist, place the new line below the last one
-        last_matching_line_pos = max(matching_lines)
-        content.insert(last_matching_line_pos + 1, define_declaration)
-    else:
-        # If no such line exists, place the new line above '#endif'
-        content.insert(endif_pos, define_declaration)
+    # Check if a line with '{sound_name_declaration}' exists
+    matching_sound_name_lines = [i for i, line in enumerate(content) if sound_name_declaration in line]
+
+    if not matching_sound_name_lines:
+        if matching_lines:
+            # If such lines exist, place the new line below the last one
+            last_matching_line_pos = max(matching_lines)
+            content.insert(last_matching_line_pos + 1, define_declaration)
+        else:
+            # If no such line exists, place the new line above '#endif'
+            content.insert(endif_pos, define_declaration)
     # Write the updated content back to sounds.h
     with open(sounds_h_path, 'w') as sounds_h_file:
         sounds_h_file.writelines(content)
