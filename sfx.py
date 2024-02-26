@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import glob
 from pydub.utils import mediainfo
+import importlib
 
 def set_decomp_directory(decomp_dir):
     # Expand the WSL path using os.path.expanduser
@@ -422,11 +423,28 @@ def add_sound_effect(sound_path, bank_name, sound_name):
     # Step 6: Success message
     #print(f"Successfully added sound effect {sound_name} to bank {bank_name}!")
 
+def are_pydub_and_ffmpeg_installed():
+    try:
+        importlib.import_module("pydub")
+    except ImportError:
+        print("DEBUG: pydub is not installed.")
+        return False
+
+    try:
+        subprocess.run(["ffmpeg", "-version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except FileNotFoundError:
+        print("DEBUG: ffmpeg is not installed.")
+        return False
+    print("DEBUG: both pydub and ffmpeg are installed.")
+    return True
+
+
 # Example usage:
-decomp_input = os.path.expanduser(input("Enter the full path of your decomp directory: "))
-if set_decomp_directory(decomp_input):
-    sound_input = input("Enter the full path of your sound file: ")
-    if check_sound_input(sound_input):
-        bank_name = get_input("Enter the bank name: ")
-        sound_name = get_input("Enter the sound name: ")
-        add_sound_effect(sound_input, bank_name, sound_name)
+if (are_pydub_and_ffmpeg_installed()):
+    decomp_input = os.path.expanduser(input("Enter the full path of your decomp directory: "))
+    if set_decomp_directory(decomp_input):
+        sound_input = input("Enter the full path of your sound file: ")
+        if check_sound_input(sound_input):
+            bank_name = get_input("Enter the bank name: ")
+            sound_name = get_input("Enter the sound name: ")
+            add_sound_effect(sound_input, bank_name, sound_name)
