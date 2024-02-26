@@ -427,13 +427,13 @@ def are_pydub_and_ffmpeg_installed():
     try:
         importlib.import_module("pydub")
     except ImportError:
-        print("DEBUG: pydub is not installed.")
+        print("Pydub not found. Please install pydub using 'pip install pydub'")
         return False
 
     try:
         subprocess.run(["ffmpeg", "-version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     except FileNotFoundError:
-        print("DEBUG: ffmpeg is not installed.")
+        print("ffmpeg not found. It is either not installed or not added to the system PATH.")
         return False
     print("DEBUG: both pydub and ffmpeg are installed.")
     return True
